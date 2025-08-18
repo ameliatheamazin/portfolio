@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Engineer Portfolio - Windows 7</title>
+    <meta name="description" content="Senior Data Engineer | Pipeline Architect | ETL Specialist">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --win7-blue: #4a9eff;
+            --win7-dark-blue: #1e5799;
+            --win7-light-blue: #7db9e8;
+            --win7-glass: rgba(255, 255, 255, 0.2);
+            --win7-border: rgba(255, 255, 255, 0.4);
+            --win7-shadow: rgba(0, 0, 0, 0.3);
+            --win7-text: #333;
+            --win7-text-light: #666;
+            --win7-taskbar: linear-gradient(to bottom, #4a9eff 0%, #1e5799 100%);
+            --win7-window: linear-gradient(to bottom, rgba(255,255,255,0.9) 0%, rgba(240,240,240,0.9) 100%);
+            --win7-header: linear-gradient(to bottom, #a6caf0 0%, #74b9ed 50%, #4a9eff 51%, #1e5799 100%);
+            --accent-green: #2d8c2d;
+            --accent-orange: #ff6b35;
+            --accent-purple: #8b5cf6;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 13px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><defs><radialGradient id="g"><stop offset="0%" stop-color="%234a9eff"/><stop offset="100%" stop-color="%231e5799"/></radialGradient></defs><rect width="100" height="100" fill="url(%23g)"/></svg>') center/cover;
+            background-attachment: fixed;
+            color: var(--win7-text);
+            line-height: 1.5;
+            cursor: default;
+            overflow: hidden;
+        }
+
+        /* Glass effect utility */
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Desktop */
+        .desktop {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, #74b9ed 0%, #4a9eff 50%, #1e5799 100%);
+            overflow: hidden;
+        }
+
+        /* Taskbar */
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: var(--win7-taskbar);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .custom-button {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .start-button {
+            width: 56px;
+            height: 36px;
+            margin: 2px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 50%, rgba(0,0,0,0.1) 51%, rgba(0,0,0,0.2) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-orb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffffff 0%, #74b9ed 30%, #4a9eff 60%, #1e5799 100%);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            position: relative;
+        }
+
+        .start-orb::after {
+            content: '⊞';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .taskbar-items {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 8px;
+        }
+
+        .taskbar-item {
+            min-width: 160px;
+            height: 32px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 50%, rgba(0,0,0,0.1) 51%, rgba(0,0,0,0.15) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            cursor: pointer;
+            color: white;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .taskbar-item.active {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.3) 50%, rgba(255,255,255,0.1) 51%, rgba(255,255,255,0.15) 100%);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .system-tray {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 8px;
+            color: white;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Window styles */
+        .window {
+            position: absolute;
+            min-width: 400px;
+            min-height: 300px;
+            background: var(--win7-window);
+            border-radius: 8px 8px 0 0;
+            box-shadow: 
+                0 0 20px rgba(0, 0, 0, 0.4),
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .window-header {
+            height: 30px;
+            background: var(--win7-header);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            color: white;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            cursor: move;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .window-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            background: #4a9eff;
+            border-radius: 2px;
+        }
+
+        .window-title {
+            flex: 1;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+
+        .window-control {
+            width: 17px;
+            height: 17px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: bold;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 50%, rgba(0,0,0,0.1) 51%, rgba(0,0,0,0.2) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .control-minimize::after { content: '−'; }
+        .control-maximize::after { content: '▢'; }
+        .control-close {
+            background: linear-gradient(to bottom, #ff6b6b 0%, #ee5a5a 50%, #d63031 51%, #b71c1c 100%);
+        }
+        .control-close::after { content: '×'; color: white; }
+
+        .window-content {
+            height: calc(100% - 30px);
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Main Portfolio Window */
+        .portfolio-window {
+            top: 40px;
+            left: 80px;
+            width: calc(100vw - 200px);
+            height: calc(100vh - 120px);
+            max-width: 1200px;
+        }
+
+        /* Tab Navigation */
+        .simple-tabs {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .simple-tabs input[type="radio"] {
+            display: none;
+        }
+
+        .tab-labels {
+            display: flex;
+            background: linear-gradient(to bottom, #f8f8f8 0%, #e8e8e8 100%);
+            border-bottom: 1px solid #ccc;
+            padding: 4px 8px 0;
+        }
+
+        .tab-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 24px;
+            background: linear-gradient(to bottom, #f0f0f0 0%, #e0e0e0 100%);
+            border: 1px solid #ccc;
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            margin-right: 3px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--win7-text);
+            transition: all 0.2s ease;
+            position: relative;
+            top: 1px;
+        }
+
+        .tab-label:hover {
+            background: linear-gradient(to bottom, #f8f8f8 0%, #e8e8e8 100%);
+            transform: translateY(-1px);
+        }
+
+        .tab-icon {
+            font-size: 16px;
+        }
+
+        .tab-content {
+            flex: 1;
+            overflow-y: auto;
+            background: white;
+        }
+
+        .tab-panel {
+            display: none;
+            padding: 32px;
+            height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        /* Show active tab */
+        #tab-about:checked ~ .tab-labels .tab-label[for="tab-about"],
+        #tab-experience:checked ~ .tab-labels .tab-label[for="tab-experience"],
+        #tab-publications:checked ~ .tab-labels .tab-label[for="tab-publications"] {
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f8f8 100%);
+            border-bottom: 1px solid white;
+            z-index: 1;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+
+        #tab-about:checked ~ .tab-content #panel-about,
+        #tab-experience:checked ~ .tab-content #panel-experience,
+        #tab-publications:checked ~ .tab-content #panel-publications {
+            display: block;
+        }
+
+        /* About Panel Styles */
+        .panel-hero {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .profile-avatar {
+            width: 88px;
+            height: 88px;
+            background: linear-gradient(135deg, #74b9ed 0%, #4a9eff 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: 900;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            box-shadow: 0 6px 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .profile-info h1 {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--win7-dark-blue);
+            margin-bottom: 8px;
+        }
+
+        .role-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .availability {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .key-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            border: 1px solid rgba(74, 158, 255, 0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .metric-number {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--win7-blue);
+            margin-bottom: 6px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Enhanced Experience Panel Styles */
+        .experience-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 24px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+        }
+
+        .experience-header h2 {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--win7-dark-blue);
+            margin-bottom: 12px;
+        }
+
+        .experience-header p {
+            color: #666;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--win7-blue) 0%, #ccc 100%);
+            border-radius: 2px;
+        }
+
+        .experience-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding-left: 80px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 20px;
+            top: 24px;
+            width: 24px;
+            height: 24px;
+            background: var(--win7-blue);
+            border: 4px solid white;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .experience-item.current .timeline-marker {
+            background: var(--accent-green);
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 12px rgba(45, 140, 45, 0.4);
+        }
+
+        .experience-card {
+            background: white;
+            border: 1px solid #e8e9ea;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .experience-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--win7-blue), var(--accent-green));
+        }
+
+        .experience-card:hover {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+        }
+
+        .experience-header-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f1f2;
+        }
+
+        .role-info h3 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--win7-dark-blue);
+            margin-bottom: 8px;
+        }
+
+        .company {
+            font-size: 16px;
+            color: var(--win7-blue);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .period {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .current-badge {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            color: var(--accent-green);
+            border: 2px solid #c8e6c8;
+        }
+
+        .completed-badge {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: #666;
+            border: 2px solid #dee2e6;
+        }
+
+        .foundation-badge {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b3);
+            color: #f57c00;
+            border: 2px solid #ffcc80;
+        }
+
+        .role-details {
+            display: grid;
+            gap: 24px;
+        }
+
+        .detail-section h4 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--win7-text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tags, .tech-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), rgba(74, 158, 255, 0.05));
+            color: var(--win7-dark-blue);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid rgba(74, 158, 255, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .tag:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(74, 158, 255, 0.2);
+        }
+
+        .tech-tag {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: #495057;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #dee2e6;
+            transition: all 0.2s ease;
+        }
+
+        .tech-tag:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        }
+
+        .role-details ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .role-details li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .role-details li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: var(--win7-blue);
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .impact-item {
+            text-align: center;
+            padding: 16px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .impact-value {
+            display: block;
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--accent-green);
+            margin-bottom: 4px;
+        }
+
+        .impact-desc {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Enhanced Publications Panel */
+        .publications-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 24px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+        }
+
+        .publications-header h2 {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--win7-dark-blue);
+            margin-bottom: 12px;
+        }
+
+        .publications-header p {
+            color: #666;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .publications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+        }
+
+        .publication-card {
+            background: white;
+            border: 1px solid #e8e9ea;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .publication-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--win7-blue);
+        }
+
+        .publication-card.conference::before {
+            background: var(--accent-orange);
+        }
+
+        .publication-card.whitepaper::before {
+            background: var(--accent-purple);
+        }
+
+        .publication-card:hover {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+        }
+        
+        .publication-type {
+            display: inline-block;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), rgba(74, 158, 255, 0.05));
+            color: var(--win7-blue);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .publication-card.conference .publication-type {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));
+            color: var(--accent-orange);
+        }
+
+        .publication-card.whitepaper .publication-type {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+            color: var(--accent-purple);
+        }
+
+        .publication-card h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--win7-dark-blue);
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .publication-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .publication-meta span {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .venue {
+            color: var(--win7-blue) !important;
+        }
+
+        .metrics {
+            color: var(--accent-green) !important;
+        }
+
+        .publication-card p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .publication-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .pub-btn {
+            padding: 10px 18px;
+            background: linear-gradient(135deg, var(--win7-blue), #3a8edf);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .pub-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+            background: linear-gradient(135deg, #5aa9ff, #4a9eff);
+        }
+
+        .pub-btn.secondary {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: var(--win7-text);
+            border: 1px solid #dee2e6;
+        }
+
+        .pub-btn.secondary:hover {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .portfolio-window {
+                left: 20px;
+                width: calc(100vw - 40px);
+            }
+            
+            .publications-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tab-panel {
+                padding: 20px;
+            }
+            
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+            
+            .experience-item {
+                padding-left: 60px;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-marker {
+                left: 12px;
+            }
+        }
+
+        /* Contact Buttons */
+        .contact-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .contact-btn {
+            padding: 12px 20px;
+            border: 1px solid #dee2e6;
+            background: linear-gradient(135deg, #f9f9f9, #e9e9e9);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            color: var(--win7-text);
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+        }
+
+        .contact-btn.primary {
+            background: linear-gradient(135deg, var(--win7-blue), #3a8edf);
+            color: white;
+            border-color: #3a8edf;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+        }
+
+        .contact-btn.primary:hover {
+            background: linear-gradient(135deg, #5aa9ff, #4a9eff);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+        }
+
+        /* About Content Styles */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .summary-card, .skills-overview {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .summary-card h3, .skills-overview h3 {
+            color: var(--win7-dark-blue);
+            margin-bottom: 16px;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .summary-card p {
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .skill-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), rgba(74, 158, 255, 0.05));
+            color: var(--win7-dark-blue);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid rgba(74, 158, 255, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(74, 158, 255, 0.2);
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.15), rgba(74, 158, 255, 0.08));
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #d0d0d0, #b0b0b0);
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #b0b0b0, #909090);
+        }
+
+        /* Enhanced button hover effects */
+        .btn {
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Desktop Icon Styles */
+        .desktop-icon {
+            position: absolute;
+            width: 80px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .desktop-icon.selected {
+            background: rgba(74, 158, 255, 0.25);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.2);
+        }
+
+        .icon-image {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 8px;
+            background: linear-gradient(135deg, #ffffff, #e0e0e0);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.2s;
+        }
+
+        .desktop-icon:hover .icon-image {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .icon-label {
+            color: white;
+            font-size: 12px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            line-height: 1.2;
+        }
+
+        /* Call-to-action enhancement */
+        .cta-highlight {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-highlight:hover::before {
+            left: 100%;
+        }
+
+        /* Enhanced timeline animations */
+        .experience-card {
+            opacity: 0;
+            animation: slideInUp 0.6s ease forwards;
+        }
+
+        .experience-card:nth-child(1) { animation-delay: 0.1s; }
+        .experience-card:nth-child(2) { animation-delay: 0.2s; }
+        .experience-card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Publication card hover effects */
+        .publication-card {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .publication-card:nth-child(odd) { animation-delay: 0.1s; }
+        .publication-card:nth-child(even) { animation-delay: 0.2s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icon" style="top: 20px; left: 20px;">
+            <div class="icon-image">💻</div>
+            <div class="icon-label">My Computer</div>
+        </div>
+        
+        <div class="desktop-icon" style="top: 20px; left: 120px;">
+            <div class="icon-image">📄</div>
+            <div class="icon-label">Resume.pdf</div>
+        </div>
+        
+        <div class="desktop-icon" style="top: 20px; left: 220px;">
+            <div class="icon-image">🗂️</div>
+            <div class="icon-label">Projects</div>
+        </div>
+
+        <!-- Main Portfolio Window -->
+        <div class="window portfolio-window" id="portfolioWindow">
+            <div class="window-header">
+                <div class="window-icon"></div>
+                <div class="window-title">Amelia Lim's Portfolio</div>
+                <div class="window-controls">
+                    <div class="window-control control-minimize"></div>
+                    <div class="window-control control-maximize"></div>
+                    <div class="window-control control-close" onclick="closeWindow('portfolioWindow')"></div>
+                </div>
+            </div>
+            
+            <div class="window-content">
+                <div class="simple-tabs">
+                    <input type="radio" name="portfolio-tab" id="tab-about" checked>
+                    <input type="radio" name="portfolio-tab" id="tab-experience">
+                    <input type="radio" name="portfolio-tab" id="tab-publications">
+                    
+                    <div class="tab-labels">
+                        <label for="tab-about" class="tab-label">
+                            <span class="tab-icon">👤</span>
+                            <span class="tab-text">About</span>
+                        </label>
+                        <label for="tab-experience" class="tab-label">
+                            <span class="tab-icon">💼</span>
+                            <span class="tab-text">Experience</span>
+                        </label>
+                        <label for="tab-publications" class="tab-label">
+                            <span class="tab-icon">📚</span>
+                            <span class="tab-text">Publications & Projects</span>
+                        </label>
+                    </div>
+                    
+                    <div class="tab-content">
+                        <!-- About Panel -->
+                        <div class="tab-panel" id="panel-about">
+                            <div class="panel-hero">
+                                <div class="profile-section">
+                                    <div class="profile-avatar">JD</div>
+                                    <div class="profile-info">
+                                        <h1>Amelia Lim</h1>
+                                        <p class="role-title">Data Engineer</p>
+                                        <div class="availability">
+                                            <span class="status-dot"></span>
+                                            Available for new opportunities
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="key-metrics">
+                                    <div class="metric">
+                                        <div class="metric-number">20TB+</div>
+                                        <div class="metric-label">Data Managed</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-number">~500k</div>
+                                        <div class="metric-label">Annual Savings</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-number">99.9%</div>
+                                        <div class="metric-label">System Uptime</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-number">3+</div>
+                                        <div class="metric-label">Years Exp.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="about-content">
+                                <div class="summary-card">
+                                    <h3>🚀 Professional Summary</h3>
+                                    <p>Experienced Data Engineer in data platform engineering and business intelligence: designing real-time pipelines that integrates diverse data sources from BU specific vendors to support strategic decision-making across FinOps analytics and customer experience domains.</p>
+                                </div>
+                                
+                                <div class="skills-overview">
+                                    <h3>⚡ Core Competencies</h3>
+                                    <div class="skill-tags">
+                                        <span class="skill-tag">Python</span>
+                                        <span class="skill-tag">Apache Spark</span>
+                                        <span class="skill-tag">Databricks</span>
+                                        <span class="skill-tag">SQL</span>
+                                        <span class="skill-tag">PostgreSQL</span>
+                                        <span class="skill-tag">Cloud Platform</span>
+                                        <span class="skill-tag">BI Integration</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="contact-actions">
+                                    <button class="contact-btn primary cta-highlight"><a href="https://www.linkedin.com/in/amelialimyq/" class="custom-button ">📧 Connect on Linkedin</a></button>
+                                    <button class="contact-btn cta-highlight"><a href="assets/LimYanQian_Amelia.pdf" download="assets/LimYanQian_Amelia.pdf" class="custom-button ">📄 Download Resume</a></button>
+                                    <button class="contact-btn cta-highlight"><a href="https://github.com/ameliatheamazin" class="custom-button ">🔗 GitHub</a></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Experience Panel -->
+                        <div class="tab-panel" id="panel-experience">
+                            <div class="experience-header">
+                                <h2>🚀 Professional Experience</h2>
+                                <p>Building scalable data solutions and driving measurable business impact</p>
+                            </div>
+                            
+                            <div class="timeline">
+                                <!-- Current Position -->
+                                <div class="experience-item current">
+                                    <div class="timeline-marker"></div>
+                                    <div class="experience-card">
+                                        <div class="experience-header-card">
+                                            <div class="role-info">
+                                                <h3>Data Engineer</h3>
+                                                <div class="company">🏢 Sitecore</div>
+                                                <div class="period">March 2025 - Present</div>
+                                            </div>
+                                            <div class="status-badge current-badge">🔥 Current Role</div>
+                                        </div>
+                                        
+                                        <div class="role-details">
+                                            <div class="detail-section">
+                                                <h4>🎯 Key Impact Areas</h4>
+                                                <div class="tags">
+                                                    <span class="tag">ETL for Finops Analytics</span>
+                                                    <span class="tag">Product Data Analytics</span>
+                                                    <span class="tag">Data Quality & Monitoring</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="detail-section">
+                                                <h4>🏆 Major Achievements</h4>
+                                                <ul>
+                                                    <li><strong>Built and optimised ETL pipelines</strong> ourcing data across multiple cloud vendors, enabling real-time finance reporting and anomaly detection</li>
+                                                    <li><strong>Designed and implemented data modelling to unify billing instracture</strong> improving cost visbility to enable value-based pricing model</li>
+                                                    <li><strong>Implemented automated data quality monitoring system</strong> flagging $500k~ of data quality issues to drive proactive discussions for improved data contracts </li>
+                                                    <li><strong>Monitored and updated security compliance alerts</strong> reducing flagged alerts to zero</li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <div class="detail-section">
+                                                <h4>📈 Measurable Business Impact</h4>
+                                                <div class="impact-grid">
+                                                    <div class="impact-item">
+                                                        <span class="impact-value">$500k+</span>
+                                                        <span class="impact-desc">Annual Savings</span>
+                                                    </div>
+                                                    <div class="impact-item">
+                                                        <span class="impact-value">3x</span>
+                                                        <span class="impact-desc">Faster Insights</span>
+                                                    </div>
+                                                    <div class="impact-item">
+                                                        <span class="impact-value">20%</span>
+                                                        <span class="impact-desc">Less Complexity</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="detail-section">
+                                                <h4>🛠️ Technology Arsenal</h4>
+                                                <div class="tech-tags">
+                                                    <span class="tech-tag">Python</span>
+                                                    <span class="tech-tag">Databricks</span>
+                                                    <span class="tech-tag">Microsoft Fabrics</span>
+                                                    <span class="tech-tag">Kubernetes</span>
+                                                    <span class="tech-tag">GitHub</span>
+                                                    <span class="tech-tag">Data source: Azure (Billing, Kubernetes), AWS S3, Elastic Cloud API</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Previous Position 1 -->
+                                <div class="experience-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="experience-card">
+                                        <div class="experience-header-card">
+                                            <div class="role-info">
+                                                <h3>Associate Data Engineer</h3>
+                                                <div class="company">🚀 AIA Singapore</div>
+                                                <div class="period">2023 - 2025</div>
+                                            </div>
+                                            <div class="status-badge completed-badge">✅ Completed</div>
+                                        </div>
+                                        
+                                        <div class="role-details">
+                                            <div class="detail-section">
+                                                <h4>🎯 Core Focus Areas</h4>
+                                                <div class="tags">
+                                                    <span class="tag">Data Warehousing</span>
+                                                    <span class="tag">ETL Optimization and Project Onboarding</span>
+                                                    <span class="tag">Performance Tuning</span>
+                                                    <span class="tag">Third Party Integration via Microservices, JDBC, ODBC connector</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="detail-section">
+                                                <h4>🚀 Key Contributions</h4>
+                                                <ul>
+                                                    <li><strong>3 customer facing projects involving real-time ingestion, processing and data modelling across diverse data sources (structured & unstructured)</strong> architecture supporting up to 5000+ customer data daily for personalised engagement post service (Purchase, Service Inquiry, Claims Processing)</li>
+                                                    <li><strong>Led enterprise data governance transformation from Hive to Unity Catalog</strong> updating access control policies to adhere to PDPA standards</li>
+                                                    <li><strong>Monitored and maintained Alteryx cloud servers for self-service analytics</strong> empowering 5+ business functions with instant insights for live dashboards and report generation</li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <div class="detail-section">
+                                                <h4>📊 Quantified Results</h4>
+                                                <div class="impact-grid">
+                                                    <div class="impact-item">
+                                                        <span class="impact-value">96%</span>
+                                                        <span class="impact-desc">CSAT rating</span>
+                                                    </div>
+                                                    <div class="impact-item">
+                                                        <span class="impact-value">99.9%</span>
+                                                        <span class="impact-desc">System Uptime</span>
+                                                    </div>
+                                                    <div class="impact-item">
+                                                        <span class="impact-value">5+</span>
+                                                        <span class="impact-desc">Business Functios Enabled</span>
+                                                    </div>
+                                                    <div class="impact-item">
+                                                        <span class="impact-value">20TB+</span>
+                                                        <span class="impact-desc">Data Managed</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="detail-section">
+                                                <h4>🛠️ Technology Stack</h4>
+                                                <div class="tech-tags">
+                                                    <span class="tech-tag">PostgreSQL</span>
+                                                    <span class="tech-tag">Databricks</span>
+                                                    <span class="tech-tag">Azure Data Factory</span>
+                                                    <span class="tech-tag">Autosys</span>
+                                                    <span class="tech-tag">Alteryx</span>
+                                                    <span class="tech-tag">Tableau</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Previous Position 2 -->
+                                <div class="experience-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="experience-card">
+                                        <div class="experience-header-card">
+                                            <div class="role-info">
+                                                <h3>Tech Consulting Intern</h3>
+                                                <div class="company">⭐ Ernst & Young Advisory Services</div>
+                                                <div class="period">2021 - 2022</div>
+                                            </div>
+                                            <div class="status-badge foundation-badge">🌟 Foundation</div>
+                                        </div>
+                                        
+                                        <div class="role-details">
+                                            <div class="detail-section">
+                                                <h4>🎯 Learning & Growth Focus</h4>
+                                                <div class="tags">
+                                                    <span class="tag">Pipeline Development and Systems Integration</span>
+                                                    <span class="tag">Roadmap Design</span>
+                                                    <span class="tag">Microservices</span>
+                                                    <span class="tag">Data Governance</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="detail-section">
+                                                <h4>🚀 Breakthrough Achievements</h4>
+                                                <ul>
+                                                    <li><strong>Streamline process for real-time energy consumption tracking </strong> processing millions of meter readings daily with responsive service disruption alerts integrated into customer mobile application ahead of nationwide smart meter rollout</li>
+                                                    <li><strong>Created executive dashboards</strong> providing real-time KPI tracking for C-level decisions</li>
+                                                    <li><strong>Created presentations deck</strong> for high-level architecture and roadmap planning</li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <div class="detail-section">
+                                                <h4>📈 Foundation Impact</h4>
+                                                <div class="impact-grid">
+                                                    <div class="impact-item">
+                                                        <span class="impact-value">Daily</span>
+                                                        <span class="impact-desc">Auto Reports</span>
+                                                    </div>
+                                                    <div class="impact-item">
+                                                        <span class="impact-value">Zero</span>
+                                                        <span class="impact-desc">To Hero</span>
+                                                    </div>
+                                                    <div class="impact-item">
+                                                        <span class="impact-value">🏗️</span>
+                                                        <span class="impact-desc">Built Foundation</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="detail-section">
+                                                <h4>🛠️ Foundation Toolkit</h4>
+                                                <div class="tech-tags">
+                                                    <span class="tech-tag">Figma</span>
+                                                    <span class="tech-tag">Excel</span>
+                                                    <span class="tech-tag">Powerpoint</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Publications Panel -->
+                        <div class="tab-panel" id="panel-publications">
+                            <div class="publications-header">
+                                <h2>📚 Publications & Passion Projects</h2>
+                                <p>Sharing knowledge through articles, conference presentations and project contributions</p>
+                            </div>
+                            
+                            <div class="publications-grid">
+                                
+                                <article class="publication-card">
+                                    <div class="publication-type">📗 Conferenece Proceedings</div>
+                                    <h3>"Towards A Machine Learning Framework for Suicide Ideation Detection in Twitter"</h3>
+                                    <div class="publication-meta">
+                                        <span class="venue">IEEE</span>
+                                        <span class="date">September 2022</span>
+                                        <span class="metrics">📈 12 Citations</span>
+                                    </div>
+                                    <p>Exploring proven machine learning framework for suicide ideation detection from tweets. Features detailed techniques and method used for data annotation, processing and feature extraction.</p>
+                                    <div class="publication-actions">
+                                        <button class="pub-btn cta-highlight"><a href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=bmnt0JcAAAAJ&authuser=1&citation_for_view=bmnt0JcAAAAJ:u5HHmVD_uO8C" style="text-decoration: none;color: inherit;">📖 Read Article</a></button>
+                                    </div>
+                                </article>
+                                
+                                <article class="publication-card conference">
+                                    <div class="publication-type">📗 Journal Publication</div>
+                                    <h3>"Characteristics of Multi-Class Suicide Risks Tweets Through Feature Extraction and Machine Learning Techniques"</h3>
+                                    <div class="publication-meta">
+                                        <span class="venue">International Journal on Informatics Visualization</span>
+                                        <span class="date">December 2023</span>
+                                        <span class="metrics">📈 2 Citations</span>
+                                    </div>
+                                    <p>Detailed analysis of liguistic Characteristics associated with varying levels of suicide risk and efficacy of feature extraction techniques to outline it. </p>
+                                    <div class="publication-actions">
+                                        <button class="pub-btn cta-highlight"><a href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=bmnt0JcAAAAJ&authuser=1&citation_for_view=bmnt0JcAAAAJ:u-x6o8ySG0sC" style="text-decoration: none;color: inherit;">📖 Read Paper</a></button>
+                                    </div>
+                                </article>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Widget -->
+        <div class="window contact-widget" id="contactWidget" style="display: none;">
+            <div class="window-header">
+                <div class="window-icon"></div>
+                <div class="window-title">Contact Me</div>
+                <div class="window-controls">
+                    <div class="window-control control-minimize"></div>
+                    <div class="window-control control-close" onclick="toggleContactWidget()"></div>
+                </div>
+            </div>
+            
+            <div class="window-content">
+                <form class="widget-form" onsubmit="handleContactSubmit(event)">
+                    <div class="form-group">
+                        <label for="contactName">Full Name:</label>
+                        <input type="text" id="contactName" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactEmail">Email Address:</label>
+                        <input type="email" id="contactEmail" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactCompany">Company:</label>
+                        <input type="text" id="contactCompany" name="company">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactSubject">Subject:</label>
+                        <select id="contactSubject" name="subject">
+                            <option>Job Opportunity</option>
+                            <option>Consulting Project</option>
+                            <option>Technical Discussion</option>
+                            <option>General Inquiry</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactMessage">Message:</label>
+                        <textarea id="contactMessage" name="message" required placeholder="Tell me about your project or opportunity..."></textarea>
+                    </div>
+                    
+                    <div style="text-align: right; margin-top: 16px;">
+                        <button type="button" class="btn" onclick="toggleContactWidget()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </div>
+                    
+                    <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #ddd; font-size: 10px; color: var(--win7-text-light);">
+                        <div><strong>Alternative Contact:</strong></div>
+                        <div>📧 amelia.limmm@gmail.com</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Taskbar -->
+    <div class="taskbar">
+        <div class="start-button">
+            <div class="start-orb"></div>
+        </div>
+        
+        <div class="taskbar-items">
+            <div class="taskbar-item active" data-target="portfolioWindow">
+                📊 Portfolio
+            </div>
+        </div>
+        
+        <div class="system-tray">
+            <span id="currentTime">12:34 PM</span>
+        </div>
+    </div>
+
+    <script>
+        // Update clock
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('currentTime').textContent = timeString;
+        }
+        
+        updateClock();
+        setInterval(updateClock, 60000);
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all panels
+            document.querySelectorAll('.panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected panel
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activate clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Contact widget toggle
+        function toggleContactWidget() {
+            const widget = document.getElementById('contactWidget');
+            if (widget.style.display === 'none' || !widget.style.display) {
+                widget.style.display = 'block';
+                // Add to taskbar
+                const taskbarItems = document.querySelector('.taskbar-items');
+                if (!document.getElementById('contactTaskbarItem')) {
+                    const taskbarItem = document.createElement('div');
+                    taskbarItem.className = 'taskbar-item';
+                    taskbarItem.id = 'contactTaskbarItem';
+                    taskbarItem.innerHTML = '✉️ Contact';
+                    taskbarItem.onclick = toggleContactWidget;
+                    taskbarItems.appendChild(taskbarItem);
+                }
+            } else {
+                widget.style.display = 'none';
+                // Remove from taskbar
+                const taskbarItem = document.getElementById('contactTaskbarItem');
+                if (taskbarItem) {
+                    taskbarItem.remove();
+                }
+            }
+        }
+
+        // Close window
+        function closeWindow(windowId) {
+            document.getElementById(windowId).style.display = 'none';
+        }
+
+        // Handle contact form submission
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            
+            // Simulate sending
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                alert('Message sent successfully! I will get back to you within 24 hours.');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                event.target.reset();
+                toggleContactWidget();
+            }, 1500);
+        }
+
+        // Make windows draggable
+        function makeDraggable(element) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            const header = element.querySelector('.window-header');
+            
+            if (header) {
+                header.onmousedown = dragMouseDown;
+            }
+            
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+                element.classList.add('dragging');
+            }
+            
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                
+                const newTop = Math.max(0, Math.min(window.innerHeight - 100, element.offsetTop - pos2));
+                const newLeft = Math.max(0, Math.min(window.innerWidth - 200, element.offsetLeft - pos1));
+                
+                element.style.top = newTop + "px";
+                element.style.left = newLeft + "px";
+            }
+            
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+                element.classList.remove('dragging');
+            }
+        }
+
+        // Initialize draggable windows
+        document.addEventListener('DOMContentLoaded', function() {
+            makeDraggable(document.getElementById('portfolioWindow'));
+            makeDraggable(document.getElementById('contactWidget'));
+            
+            // Desktop icon interactions
+            document.querySelectorAll('.desktop-icon').forEach(icon => {
+                icon.addEventListener('click', function() {
+                    document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+                
+                icon.addEventListener('dblclick', function() {
+                    const label = this.querySelector('.icon-label').textContent;
+                    if (label.includes('Resume')) {
+                        alert('Opening resume.pdf...');
+                    } else if (label.includes('Projects')) {
+                        showTab('projects');
+                    } else if (label.includes('Computer')) {
+                        alert('My Computer - Windows Explorer would open here');
+                    }
+                });
+            });
+
+            // Start button interaction
+            document.querySelector('.start-button').addEventListener('click', function() {
+                alert('Start Menu would open here!\n\nAvailable options:\n• All Programs\n• Documents\n• Settings\n• Search\n• Help and Support\n• Run...\n• Shut Down');
+            });
+
+            // List item hover effects
+            document.querySelectorAll('.list-item').forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.background = 'rgba(74, 158, 255, 0.1)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.background = '';
+                });
+            });
+
+            // Window minimize/maximize functionality
+            document.querySelectorAll('.control-minimize').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const window = this.closest('.window');
+                    window.style.display = 'none';
+                // Optionally: mark the taskbar tab as minimized (if needed)
+                const winId = win.id;
+                const tab = document.querySelector(`.taskbar-tab[data-target="${winId}"]`);
+                if (tab) {
+                    tab.classList.add('minimized');
+                }
+                });
+            });
+
+            // Restore window when clicking the taskbar tab
+            document.querySelectorAll('.taskbar-item').forEach(tab => {
+                tab.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const window = document.getElementById(targetId);
+                if (window) {
+                    window.style.display = 'block';
+                    window.focus(); // Optional: bring it to front
+                    this.classList.remove('minimized');
+                }
+                });
+            });
+
+            document.querySelectorAll('.control-maximize').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const window = this.closest('.window');
+                    if (window.style.width === '100vw') {
+                        // Restore
+                        window.style.width = '';
+                        window.style.height = '';
+                        window.style.top = '';
+                        window.style.left = '';
+                    } else {
+                        // Maximize
+                        window.style.width = '100vw';
+                        window.style.height = 'calc(100vh - 40px)';
+                        window.style.top = '0';
+                        window.style.left = '0';
+                    }
+                });
+            });
+        });
+
+        // Simulate system activity
+        setInterval(() => {
+            const metrics = document.querySelectorAll('.metric-value');
+            if (Math.random() > 0.9) { // 10% chance every second
+                metrics.forEach(metric => {
+                    metric.style.color = '#2d8c2d';
+                    setTimeout(() => {
+                        metric.style.color = '';
+                    }, 300);
+                });
+            }
+        }, 1000);
+
+        // Add some visual feedback for interactions
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn') || e.target.classList.contains('tab')) {
+                e.target.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    e.target.style.transform = '';
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>icon"></div>
+                                <div>
+                                    <strong>Kafka + Spark Streaming</strong><br>
+                                    <small style="color: var(--win7-text-light);">50K events/sec, &lt;100ms latency</small>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div class="item-icon"></div>
+                                <div>
+                                    <strong>Redis Caching Layer</strong><br>
+                                    <small style="color: var(--win7-text-light);">Sub-millisecond query responses</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="list-view">
+                            <div class="list-header">ML Feature Store Platform</div>
+                            <div class="list-item">
+                                <div class="item-icon"></div>
+                                <div>
+                                    <strong>Feast + MLflow Integration</strong><br>
+                                    <small style="color: var(--win7-text-light);">10K+ active features, 25 models served</small>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div class="item-
